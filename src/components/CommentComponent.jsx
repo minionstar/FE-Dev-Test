@@ -51,7 +51,7 @@ function CommentComponent({ postId }) {
                             <h4><span className='font-semibold mr-1'>Name:</span>{comment.name}</h4>
                             <p><span className='font-semibold mr-1'>Email:</span>{comment.email}</p>
                             <div className='flex flex-row'>
-                                <span className='font-semibold mr-1'>Content:</span>
+                                <span className='font-semibold mr-1'>Comment:</span>
                                 <p>{comment.body}</p>
                             </div>
                         </div>
