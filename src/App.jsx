@@ -3,6 +3,7 @@ import { fetchPosts, fetchUsers } from './api/api';
 import PostList from './components/PostList';
 import FilterComponent from './components/FilterComponent';
 import SummaryComponent from './components/SummaryComponent';
+import Pagination from './components/Pagination'; // Import the Pagination component
 import './index.css';
 
 function App() {
@@ -10,6 +11,8 @@ function App() {
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(10); // You can adjust the number of posts per page
 
     useEffect(() => {
         // Asynchronously fetch posts and users from the API when the component mounts
@@ -35,9 +38,18 @@ function App() {
     // Handler for changing the user filter
     const handleUserFilterChange = (userId) => {
         // Filter posts based on selected user ID or show all if no user is selected
+        setCurrentPage(1)
         const filtered = userId ? posts.filter(post => post.userId === parseInt(userId)) : posts;
         setFilteredPosts(filtered);
     };
+
+    // Get current posts
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+
+    // Change page
+    const paginate = pageNumber => setCurrentPage(pageNumber);
 
     return (
         <div className="p-10 flex flex-row justify-center w-full">
@@ -48,7 +60,13 @@ function App() {
                     <SummaryComponent posts={filteredPosts} users={users} />
                 </div>
                 <hr className='my-5' />
-                <PostList posts={filteredPosts} />
+                <PostList posts={currentPosts} />
+                <Pagination 
+                    currentPage={currentPage} 
+                    totalPosts={filteredPosts.length} 
+                    postsPerPage={postsPerPage} 
+                    paginate={paginate} 
+                />
             </div>
         </div>
     );
